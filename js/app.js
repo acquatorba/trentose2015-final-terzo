@@ -14,6 +14,18 @@ var ParlaModel = {
    getLanguageScore : function (phrase, language){
      // write your code here, but don't add any additional 
      // parameters to the the function
+       var score=0;
+       for (var i=0;i<this.length;i++){
+           if(this[i].name==language){
+           var parole=languages[i].dictionary;
+            for(var j=0;j<parole.length;j++){
+                if(phrase.indexOf(parole[j])>-1){
+                        score++;
+                }
+            }
+           }
+       }
+       return score;
    },
   
    /* Returns the name of the language in which the phrase
@@ -22,7 +34,46 @@ var ParlaModel = {
     */
    detectLanguage : function (phrase) {
      // write your code here, but don't add any additional 
-     // parameters to the the function     
+     // parameters to the the function
+       var maxscore=0;
+       var lingua;
+       for(var i=0;i<languages.length;i++){
+           if(ParlaModel.getLanguageScore(phrase,languages[i].name)>maxscore){
+               maxscore=ParlaModel.getLanguageScore(phrase,languages[i].name);
+               lingua=languages[i].name;
+           }
+           
+       }
+       return lingua;
    }
          
+}
+
+var octopus ={
+    init: function(){
+        view.init();
+        
+    },
+    passafrase: function(Ph){
+        return ParlaModel.detectLanguage(Ph);
+        
+    }
+    
 };
+
+var view ={
+    init: function(){
+        view.startbutton();
+    },
+    startbutton: function(){
+        $(".check").on("click", function (event) {
+                  var text=$("input").val();
+                  console.log(text);
+                  $(".lang-name").html(octopus.passafrase(text));
+              })
+    }
+};
+
+
+
+octopus.init();
